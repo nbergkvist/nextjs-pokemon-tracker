@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { signOutUser } from "@/firebase/auth/auth";
 import { useRouter } from "next/navigation";
 
-// const fetchData = async () => {
-//   const sets = await PokemonTCG.getAllSets();
-//   return sets;
-// };
+const fetchData = async () => {
+  const sets = await PokemonTCG.getAllSets();
+  return sets;
+};
 
 const Sets = () => {
   const [allSets, setAllSets] = useState<PokemonTCG.Set[]>();
@@ -18,16 +18,16 @@ const Sets = () => {
     router.push("/");
   };
 
-  // useEffect(() => {
-  //   fetchData().then((data) => {
-  //     setAllSets(data);
-  //   }).catch(console.error);
-  // }, []);
+  useEffect(() => {
+    fetchData().then((data) => {
+      setAllSets(data);
+    }).catch(console.error);
+  }, []);
 
   return (
     <div>
       <button onClick={signOut}>Signout</button>
-      {/* {allSets?.slice(0)
+      {allSets?.slice(0)
         .reverse()
         .map((set) => (
           <Link
@@ -38,7 +38,7 @@ const Sets = () => {
             <img alt={set.name} src={set.images.logo} className="h-[80px]" />
             <p>{set.name}</p>
           </Link>
-        ))} */}
+        ))}
     </div>
   );
 };

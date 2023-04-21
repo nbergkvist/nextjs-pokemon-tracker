@@ -5,20 +5,25 @@ import Pokemon from "@/components/pokemon/pokemon";
 import Link from "next/link";
 import getData from "@/firebase/getData";
 import addData from "@/firebase/addData";
+import { getCurrentUser } from "@/firebase/auth/auth";
 
 async function getDataa(id: string) {
   const res = await PokemonTCG.findCardsByQueries({ q: `set.id:${id}` });
   return res;
 }
 
-const getFirebaseData = async (id: string) => {
-  const { result, error } = await getData("niklas", id);
-  return { result, error }
+const getFirebaseData = async (id: string, user: any) => {
+  const { result, error } = await getData(user, id);
+  return { result, error };
 };
 
-const setFirebaseData = async (id: string, data: PokemonTCG.Card[]) => {
-  const { result, error } = await addData("niklas", id, {data})
-  return { result, error }
+const setFirebaseData = async (
+  user: any,
+  id: string,
+  data: PokemonTCG.Card[]
+) => {
+  const { result, error } = await addData(user, id, { data });
+  return { result, error };
 };
 
 const Set = () => {
@@ -27,18 +32,26 @@ const Set = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getFirebaseData(params?.set).then((data) => {
-      if (data.result?.data()) {
-        setAllPokemons(data.result?.data()?.data);
-        setIsLoading(false);
-      } else {
-        getDataa(params?.set).then((data) => {
-          setAllPokemons(data);
-          setFirebaseData(params?.set, data)
-          setIsLoading(false);
-        });
+    getCurrentUser().then((user) => {
+      if (user) {
+        getFirebaseData(params?.set, user)
+          .then((data) => {
+            if (data.result?.data()) {
+              setAllPokemons(data.result?.data()?.data);
+              setIsLoading(false);
+            } else {
+              getDataa(params?.set)
+                .then((data) => {
+                  setAllPokemons(data);
+                  setFirebaseData(user, params?.set, data);
+                  setIsLoading(false);
+                })
+                .catch(() => setIsLoading(false));
+            }
+          })
+          .catch(() => setIsLoading(false));
       }
-    })
+    });
   }, [params?.set]);
 
   return (
