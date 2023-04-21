@@ -1,7 +1,7 @@
 "use client";
+import Login from "@/components/login/login";
 import {
   getCurrentUser,
-  signInWithGoogle,
 } from "@/firebase/auth/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,10 +20,13 @@ const Home = () => {
     }
   }, [waitingForLogin]);
 
+  const loginProps = {
+    setWaitingForLogin: setWaitingForLogin
+  }
+
   return (
     <div className="w-full">
-      <button onClick={() =>signInWithGoogle(setWaitingForLogin)}>Signin</button>
-      <br />
+      <Login {...loginProps} />
     </div>
   );
 };
