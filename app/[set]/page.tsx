@@ -5,11 +5,23 @@ import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import { useParams } from "next/navigation";
 import Pokemon from "@/components/pokemon/pokemon";
 import Link from "next/link";
+import getData from "@/firebase/getData";
+import addData from "@/firebase/addData";
 
-async function getData(id: string) {
+async function getDataa(id: string) {
   const res = await PokemonTCG.findCardsByQueries({ q: `set.id:${id}` });
   return res;
 }
+
+const getFirebaseData = async (id: string) => {
+  const { result, error } = await getData("niklas", id);
+  return { result, error }
+};
+
+const setFirebaseData = async (id: string, data: PokemonTCG.Card[]) => {
+  const { result, error } = await addData("niklas", id, {data})
+  return { result, error }
+};
 
 const Set = () => {
   const params = useParams();
@@ -17,10 +29,18 @@ const Set = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getData(params?.set).then((data) => {
-      setAllPokemons(data);
-      setIsLoading(false);
-    });
+    getFirebaseData(params?.set).then((data) => {
+      if (data.result?.data()) {
+        setAllPokemons(data.result?.data()?.data);
+        setIsLoading(false);
+      } else {
+        getDataa(params?.set).then((data) => {
+          setAllPokemons(data);
+          setFirebaseData(params?.set, data)
+          setIsLoading(false);
+        });
+      }
+    })
   }, [params?.set]);
 
   return (
