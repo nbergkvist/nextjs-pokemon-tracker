@@ -45,7 +45,7 @@ const Set = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <header>Header </header>
+      <header>Header</header>
       <div
         className="grow overflow-auto grid gap-4 m-4 justify-items-center"
         style={{
