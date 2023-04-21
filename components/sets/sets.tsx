@@ -13,12 +13,13 @@ const Sets = (props: Props) => {
         .slice(0)
         .reverse()
         .map((set) => (
-          <Link key={set.id} href={`/${set.id}`}>
-            <div className="flex items-center flex-col mx-10 p-2 my-4 border rounded-xl border-solid border-purple">
-              <img alt={set.name} src={set.images.logo} className="h-[80px]" />
-              <>{console.log(set.images)}</>
-              <p>{set.name}</p>
-            </div>
+          <Link
+            key={set.id}
+            href={`/${set.id}`}
+            className="flex items-center flex-col mx-10 p-2 my-4 border rounded-xl border-solid border-purple"
+          >
+            <img alt={set.name} src={set.images.logo} className="h-[80px]" />
+            <p>{set.name}</p>
           </Link>
         ))}
     </div>

@@ -1,4 +1,4 @@
-import './globals.css'
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -8,8 +8,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <title>Pokemon tracker</title>
-        <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+        <title>Pokemon tracker</title>
+        <link rel="shortcut icon" href="/favicon.png" />
+        <meta
+          name="viewport"
+          content="initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover"
+        />
       </head>
       <body>{children}</body>
     </html>

@@ -9,7 +9,9 @@ async function getData() {
 const Home = async () => {
   const allSets = await getData();
   return (
-    <div className="w-full"><Sets allSets={allSets} /></div>
+    <div className="w-full">
+      <Sets allSets={allSets} />
+      </div>
   );
 };
 
