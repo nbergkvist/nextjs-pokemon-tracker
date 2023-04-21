@@ -1,16 +1,45 @@
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getCurrentUser, signOutUser } from "@/firebase/auth/auth";
+import { useRouter } from "next/navigation";
 
-type Props = {
-  allSets: PokemonTCG.Set[];
+const fetchData = async () => {
+  const sets = await PokemonTCG.getAllSets();
+  return sets;
 };
 
-const Sets = (props: Props) => {
-  const { allSets } = props;
+const Sets = () => {
+  const [allSets, setAllSets] = useState<PokemonTCG.Set[]>();
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  const signOut = () => {
+    signOutUser();
+    router.push("/");
+  };
+
+  useEffect(() => {
+    getCurrentUser().then((user) => {
+      if (user) {
+        setUser(user);
+        console.log("user Returned", user);
+      } else {
+        router.push("/");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchData().then((data) => {
+      setAllSets(data);
+    }).catch(console.error);
+  }, []);
+
   return (
     <div>
-      {allSets
-        .slice(0)
+      <button onClick={() => signOut}>Signout</button>
+      {allSets?.slice(0)
         .reverse()
         .map((set) => (
           <Link

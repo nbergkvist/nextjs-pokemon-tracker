@@ -1,17 +1,30 @@
-import Sets from "@/components/sets/sets";
-import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
+"use client";
+import {
+  getCurrentUser,
+  signInWithGoogle,
+} from "@/firebase/auth/auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-async function getData() {
-  const sets = await PokemonTCG.getAllSets();
-  return sets;
-}
+const Home = () => {
+  const router = useRouter();
+  const [waitingForLogin, setWaitingForLogin] = useState<boolean>(true);
 
-const Home = async () => {
-  const allSets = await getData();
+  useEffect(() => {
+    if (!waitingForLogin) {
+      getCurrentUser().then((user) => {
+        if (user) {
+          router.push("/sets/");
+        }
+      });
+    }
+  }, [waitingForLogin]);
+
   return (
     <div className="w-full">
-      <Sets allSets={allSets} />
-      </div>
+      <button onClick={() =>signInWithGoogle(setWaitingForLogin)}>Signin</button>
+      <br />
+    </div>
   );
 };
 

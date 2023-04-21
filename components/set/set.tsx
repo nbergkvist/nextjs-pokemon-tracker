@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import { useParams } from "next/navigation";
@@ -63,7 +61,7 @@ const Set = () => {
         )}
       </div>
       <footer>
-        <Link href={`/`}>
+        <Link href={`/sets`}>
           <div className="bg-purple h-[50px] rounded mx-4 mb-4 text-black flex items-center justify-center">
             Back to sets
           </div>
