@@ -40,7 +40,9 @@ const Set = () => {
   const [quickEdit, setQuickEdit] = useState<boolean>(false);
   const [showOwned, setShowOwned] = useState<boolean>(false);
   const [showUnOwned, setShowUnOwned] = useState<boolean>(false);
-  const [selectedPokemonIndex, setSelectedPokemonIndex] = useState<number | undefined>(undefined);
+  const [selectedPokemonIndex, setSelectedPokemonIndex] = useState<
+    number | undefined
+  >(undefined);
 
   useEffect(() => {
     getCurrentUser().then((user) => {
@@ -96,35 +98,47 @@ const Set = () => {
     setShowUnOwned(!showUnOwned);
   };
 
-  useEffect(() => {
-    if (filter) {
-      const filtered = filteredPokemon?.filter((pokemon) =>
-        pokemon.name.toLowerCase().includes(filter.toLowerCase())
-      );
-      setFilteredPokemon(filtered);
-    } else if (!showOwned && !showUnOwned) {
-      setFilteredPokemon(allPokemons);
-    }
-  }, [filter, showOwned, showUnOwned]);
+  // useEffect(() => {
+  //   if (filter) {
+  //     const filtered = filteredPokemon?.filter((pokemon) =>
+  //       pokemon.name.toLowerCase().includes(filter.toLowerCase())
+  //     );
+  //     setFilteredPokemon(filtered);
+  //   } else if (!showOwned && !showUnOwned) {
+  //     setFilteredPokemon(allPokemons);
+  //   }
+  // }, [filter, showOwned, showUnOwned]);
 
   useEffect(() => {
     if (showOwned) {
-      const filtered = filteredPokemon?.filter(
-        (pokemon) => pokemon.isCollected
-      );
-      setFilteredPokemon(filtered);
+      const filtered = allPokemons?.filter((pokemon) => pokemon.isCollected);
+      if (filter) {
+        const searchFilter = filtered?.filter((pokemon) =>
+          pokemon.name.toLowerCase().includes(filter.toLowerCase())
+        );
+        setFilteredPokemon(searchFilter);
+      } else {
+        setFilteredPokemon(filtered);
+      }
     } else if (showUnOwned) {
-      const filtered = filteredPokemon?.filter(
-        (pokemon) => !pokemon.isCollected
-      );
-      setFilteredPokemon(filtered);
+      const filtered = allPokemons?.filter((pokemon) => !pokemon.isCollected);
+      if (filter) {
+        const searchFilter = filtered?.filter((pokemon) =>
+          pokemon.name.toLowerCase().includes(filter.toLowerCase())
+        );
+        setFilteredPokemon(searchFilter);
+      } else {
+        setFilteredPokemon(filtered);
+      }
     } else if (filter) {
       const filtered = allPokemons?.filter((pokemon) =>
         pokemon.name.toLowerCase().includes(filter.toLowerCase())
       );
       setFilteredPokemon(filtered);
+    } else {
+      setFilteredPokemon(allPokemons)
     }
-  }, [showUnOwned, showOwned]);
+  }, [showUnOwned, showOwned, filter]);
 
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
@@ -180,36 +194,32 @@ const Set = () => {
               <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
             </label>
           </div>
-          {!showUnOwned && (
-            <div className="flex mb-4">
-              <p className="grow">Show owned</p>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  value=""
-                  checked={showOwned}
-                  onChange={() => setShowOwned(!showOwned)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
-              </label>
-            </div>
-          )}
-          {!showOwned && (
-            <div className="flex mb-4">
-              <p className="grow">Show unowned</p>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  value=""
-                  checked={showUnOwned}
-                  onChange={() => setShowUnOwned(!showUnOwned)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
-              </label>
-            </div>
-          )}
+          <div className="flex mb-4">
+            <p className="grow">Show owned</p>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                value=""
+                checked={showOwned}
+                onChange={() => filterOwned()}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
+            </label>
+          </div>
+          <div className="flex mb-4">
+            <p className="grow">Show unowned</p>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                value=""
+                checked={showUnOwned}
+                onChange={() => filterUnOwned()}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
+            </label>
+          </div>
         </div>
       </header>
       <div
@@ -224,7 +234,9 @@ const Set = () => {
             <button
               key={pokemon.id}
               onClick={() =>
-                quickEdit ? changeCollected(pokemon.id) : setSelectedPokemonIndex(index)
+                quickEdit
+                  ? changeCollected(pokemon.id)
+                  : setSelectedPokemonIndex(index)
               }
             >
               <Pokemon pokemon={pokemon} />
