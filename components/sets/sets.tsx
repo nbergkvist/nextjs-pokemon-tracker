@@ -19,27 +19,40 @@ const Sets = () => {
   };
 
   useEffect(() => {
-    fetchData().then((data) => {
-      setAllSets(data);
-    }).catch(console.error);
+    fetchData()
+      .then((data) => {
+        setAllSets(data);
+      })
+      .catch(console.error);
   }, []);
 
   return (
-    <div>
-      <button onClick={signOut}>Signout</button>
-      {allSets?.slice(0)
-        .reverse()
-        .map((set) => (
-          <Link
-            key={set.id}
-            href={`/sets/${set.id}`}
-            className="flex items-center flex-col mx-10 p-2 my-4 border rounded-xl border-solid border-purple"
-          >
-            <img alt={set.name} src={set.images.logo} className="h-[80px]" />
-            <p>{set.name}</p>
-          </Link>
-        ))}
-    </div>
+    <>
+      {allSets ? (
+        <div>
+          <button onClick={signOut}>Signout</button>
+          {allSets
+            ?.slice(0)
+            .reverse()
+            .map((set) => (
+              <Link
+                key={set.id}
+                href={`/sets/${set.id}`}
+                className="flex items-center flex-col mx-10 p-2 my-4 border rounded-xl border-solid border-purple"
+              >
+                <img
+                  alt={set.name}
+                  src={set.images.logo}
+                  className="h-[80px]"
+                />
+                <p>{set.name}</p>
+              </Link>
+            ))}
+        </div>
+      ) : (
+        <div>Loading</div>
+      )}
+    </>
   );
 };
 

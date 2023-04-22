@@ -1,12 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState,useEffect } from "react";
-import { signUpUserWithEmailAndPassword,getCurrentUser } from "@/firebase/auth/auth";
+import { useState, useEffect } from "react";
+import {
+  signUpUserWithEmailAndPassword,
+  getCurrentUser,
+} from "@/firebase/auth/auth";
 
 function SignUpForm() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const onFormDataChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,9 +36,8 @@ function SignUpForm() {
   }, [router]);
 
   return (
-    <div>
-      <h1 className="text-xl">Sign Up</h1>
-      <div>
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="border rounded-xl border-solid border-purple p-4 w-[250px]">
         <div>
           <label htmlFor="email" className="font-semibold">
             Email
@@ -42,7 +48,7 @@ function SignUpForm() {
             id=""
             value={formData["email"]}
             onChange={onFormDataChange}
-            className="border border-black block"
+            className="border border-black block w-full"
           />
         </div>
         <div>
@@ -55,7 +61,7 @@ function SignUpForm() {
             id=""
             value={formData["password"]}
             onChange={onFormDataChange}
-            className="border border-black block"
+            className="border border-black block w-full"
           />
         </div>
         <div>
@@ -68,12 +74,25 @@ function SignUpForm() {
             id=""
             value={formData["confirmPassword"]}
             onChange={onFormDataChange}
-            className="border border-black block"
+            className="border border-black block w-full"
           />
         </div>
-        <button type="button" onClick={onFormDataSubmit} className="border border-red-500 mt-4">
-          Submit
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="border border-red-500 mt-4 grow bg-purple text-black"
+          >
+            back
+          </button>
+          <button
+            type="button"
+            onClick={onFormDataSubmit}
+            className="border border-red-500 mt-4 grow bg-purple text-black"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
