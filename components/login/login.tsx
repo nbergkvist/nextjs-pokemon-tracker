@@ -63,14 +63,14 @@ function Login() {
         <button
             type="button"
             onClick={() => router.push("/signup")}
-            className="border border-red-500 mt-4 grow bg-purple text-black"
+            className="mt-4 grow bg-purple text-black"
           >
             Signup
           </button>
           <button
             type="button"
             onClick={onFormDataSubmit}
-            className="border border-red-500 mt-4 grow bg-purple text-black"
+            className="mt-4 grow bg-purple text-black"
           >
             Login
           </button>

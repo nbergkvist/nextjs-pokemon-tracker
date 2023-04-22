@@ -81,14 +81,14 @@ function SignUpForm() {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="border border-red-500 mt-4 grow bg-purple text-black"
+            className="mt-4 grow bg-purple text-black"
           >
             back
           </button>
           <button
             type="button"
             onClick={onFormDataSubmit}
-            className="border border-red-500 mt-4 grow bg-purple text-black"
+            className="mt-4 grow bg-purple text-black"
           >
             Submit
           </button>
