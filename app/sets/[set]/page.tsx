@@ -12,14 +12,13 @@ const SetPage = () => {
   useEffect(() => {
     getCurrentUser().then((user) => {
       if (user) {
-        console.log("user", user);
         setUser(user);
       } else {
         router.push("/");
       }
     });
   }, []);
-  
+
   return <>{user && <Set />}</>;
 };
 

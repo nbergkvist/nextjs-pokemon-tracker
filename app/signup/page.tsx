@@ -1,27 +1,25 @@
 "use client";
-import Login from "@/components/login/login";
-import {
-  getCurrentUser,
-} from "@/firebase/auth/auth";
+import SignUpForm from "@/components/signup/signup";
+import { getCurrentUser } from "@/firebase/auth/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const Home = () => {
+const SetsPage = () => {
   const router = useRouter();
 
   useEffect(() => {
       getCurrentUser().then((user) => {
         if (user) {
-          router.push("/sets/");
+            router.push("/sets");
         }
-      });
+    });
   }, []);
 
   return (
     <div className="w-full">
-      <Login />
+      <SignUpForm />
     </div>
   );
 };
 
-export default Home;
+export default SetsPage;

@@ -20,7 +20,7 @@ const getFirebaseData = async (id: string, user: any) => {
 const setFirebaseData = async (
   user: any,
   id: string,
-  data: PokemonTCG.Card[]
+  data: Array<PokemonTCG.Card & { isCollected?: boolean }>
 ) => {
   const { result, error } = await addData(user, id, { data });
   return { result, error };
@@ -28,12 +28,15 @@ const setFirebaseData = async (
 
 const Set = () => {
   const params = useParams();
-  const [allPokemons, setAllPokemons] = useState<PokemonTCG.Card[]>();
+  const [allPokemons, setAllPokemons] =
+    useState<Array<PokemonTCG.Card & { isCollected?: boolean }>>();
   const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<{}>();
 
   useEffect(() => {
     getCurrentUser().then((user) => {
       if (user) {
+        setUserData(user);
         getFirebaseData(params?.set, user)
           .then((data) => {
             if (data.result?.data()) {
@@ -54,6 +57,19 @@ const Set = () => {
     });
   }, [params?.set]);
 
+  const changeCollected = (id: string) => {
+    const newPokemonData = allPokemons?.map((pokemon) => {
+      if (pokemon.id === id) {
+        pokemon.isCollected = !pokemon.isCollected;
+      }
+      return pokemon;
+    });
+    if (newPokemonData) {
+      setFirebaseData(userData, params?.set, newPokemonData);
+      setAllPokemons(newPokemonData);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       <header>Header</header>
@@ -61,11 +77,14 @@ const Set = () => {
         className="grow overflow-auto grid gap-4 m-4 justify-items-center"
         style={{
           gridTemplateColumns: "repeat( auto-fit, minmax(100px, 1fr) )",
+          gridTemplateRows: "auto auto 1fr 1fr 1fr auto auto",
         }}
       >
         {allPokemons?.length && allPokemons?.length > 0 ? (
           allPokemons.map((pokemon) => (
-            <Pokemon key={pokemon.id} pokemon={pokemon} />
+            <button key={pokemon.id} onClick={() => changeCollected(pokemon.id)}>
+              <Pokemon pokemon={pokemon} />
+            </button>
           ))
         ) : isLoading ? (
           <div>Loading</div>

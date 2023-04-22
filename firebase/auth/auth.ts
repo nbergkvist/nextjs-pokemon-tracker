@@ -6,6 +6,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 export const auth = getAuth(firebase_app);
@@ -27,16 +29,32 @@ export const getCurrentUser = async () => {
   return uid;
 };
 
-const provider = new GoogleAuthProvider();
+// const provider = new GoogleAuthProvider();
 
-export const signInWithGoogle = async (setWaitingForLogin: Dispatch<SetStateAction<boolean>>) => {
-    try {
-    const userCredential = await signInWithPopup(auth, provider);
-    setWaitingForLogin(false);
+// export const signInWithGoogle = async (setWaitingForLogin: Dispatch<SetStateAction<boolean>>) => {
+//     try {
+//     const userCredential = await signInWithPopup(auth, provider);
+//     setWaitingForLogin(false);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+export const signUpUserWithEmailAndPassword = async (email: string, password: string) => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.log(error);
   }
-}
+};
+
+export const signInUserWithEmailAndPassword = async (email: string, password: string) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const signOutUser = async () => {
   try {

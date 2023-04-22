@@ -11,7 +11,6 @@ const SetsPage = () => {
   useEffect(() => {
       getCurrentUser().then((user) => {
         if (user) {
-            console.log('user', user)
             setUser(user);
         } else {
             router.push("/");

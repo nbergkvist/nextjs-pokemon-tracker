@@ -32,7 +32,7 @@ const Sets = () => {
         .map((set) => (
           <Link
             key={set.id}
-            href={`/${set.id}`}
+            href={`/sets/${set.id}`}
             className="flex items-center flex-col mx-10 p-2 my-4 border rounded-xl border-solid border-purple"
           >
             <img alt={set.name} src={set.images.logo} className="h-[80px]" />
