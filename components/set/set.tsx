@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import { useParams } from "next/navigation";
 import Pokemon from "@/components/pokemon/pokemon";
@@ -32,6 +32,13 @@ const Set = () => {
     useState<Array<PokemonTCG.Card & { isCollected?: boolean }>>();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<{}>();
+  const [filteredPokemon, setFilteredPokemon] =
+    useState<Array<PokemonTCG.Card & { isCollected?: boolean }>>();
+  const [filter, setFilter] = useState<string>("");
+  const [dropdownOpen, setDropwdownOpen] = useState<boolean>(false);
+  const [quickEdit, setQuickEdit] = useState<boolean>(false);
+  const [showOwned, setShowOwned] = useState<boolean>(false);
+  const [showUnOwned, setShowUnOwned] = useState<boolean>(false);
 
   useEffect(() => {
     getCurrentUser().then((user) => {
@@ -41,11 +48,13 @@ const Set = () => {
           .then((data) => {
             if (data.result?.data()) {
               setAllPokemons(data.result?.data()?.data);
+              setFilteredPokemon(data.result?.data()?.data);
               setIsLoading(false);
             } else {
               getDataa(params?.set)
                 .then((data) => {
                   setAllPokemons(data);
+                  setFilteredPokemon(data);
                   setFirebaseData(user, params?.set, data);
                   setIsLoading(false);
                 })
@@ -67,12 +76,140 @@ const Set = () => {
     if (newPokemonData) {
       setFirebaseData(userData, params?.set, newPokemonData);
       setAllPokemons(newPokemonData);
+      setFilteredPokemon(newPokemonData);
     }
+  };
+
+  const filterOwned = () => {
+    if (showUnOwned) {
+      setShowUnOwned(false);
+    }
+    setShowOwned(!showOwned);
+  };
+
+  const filterUnOwned = () => {
+    if (showOwned) {
+      setShowOwned(false);
+    }
+    setShowUnOwned(!showUnOwned);
+  };
+
+  useEffect(() => {
+    if (filter) {
+      const filtered = filteredPokemon?.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(filter.toLowerCase())
+      );
+      setFilteredPokemon(filtered);
+    } else if (!showOwned && !showUnOwned) {
+      setFilteredPokemon(allPokemons);
+    }
+  }, [filter, showOwned, showUnOwned]);
+
+  useEffect(() => {
+    if (showOwned) {
+      const filtered = filteredPokemon?.filter(
+        (pokemon) => pokemon.isCollected
+      );
+      setFilteredPokemon(filtered);
+    } else if (showUnOwned) {
+      const filtered = filteredPokemon?.filter(
+        (pokemon) => !pokemon.isCollected
+      );
+      setFilteredPokemon(filtered);
+    } else if (filter) {
+      const filtered = allPokemons?.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(filter.toLowerCase())
+      );
+      setFilteredPokemon(filtered);
+    }
+  }, [showUnOwned, showOwned]);
+
+  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilter(event.target.value);
   };
 
   return (
     <div className="flex flex-col h-full">
-      <header>Header</header>
+      <header className="flex w-full relative">
+        <input
+          type="text"
+          id="first_name"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm block grow p-2.5"
+          placeholder="Search"
+          value={filter}
+          onChange={handleFilterChange}
+        />
+        <div className="w-[50px] flex items-center justify-center">
+          <button
+            className="w-[32px]"
+            onClick={() => setDropwdownOpen(!dropdownOpen)}
+          >
+            <svg
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <div
+          className={`absolute top-[45px] left-0 w-full p-4 bg-darkbg z-10 ${
+            dropdownOpen ? "block" : "hidden"
+          }`}
+        >
+          <div className="flex mb-4">
+            <p className="grow">Quick add mode</p>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                value=""
+                checked={quickEdit}
+                onChange={() => setQuickEdit(!quickEdit)}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-bgdark peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
+            </label>
+          </div>
+          {!showUnOwned && (
+            <div className="flex mb-4">
+              <p className="grow">Show owned</p>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  value=""
+                  checked={showOwned}
+                  onChange={() => setShowOwned(!showOwned)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-bgdark peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
+              </label>
+            </div>
+          )}
+          {!showOwned && (
+            <div className="flex mb-4">
+              <p className="grow">Show unowned</p>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  value=""
+                  checked={showUnOwned}
+                  onChange={() => setShowUnOwned(!showUnOwned)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-bgdark peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
+              </label>
+            </div>
+          )}
+        </div>
+      </header>
       <div
         className="grow overflow-auto grid gap-4 m-4 justify-items-center"
         style={{
@@ -80,9 +217,12 @@ const Set = () => {
           gridTemplateRows: "auto auto 1fr 1fr 1fr auto auto",
         }}
       >
-        {allPokemons?.length && allPokemons?.length > 0 ? (
-          allPokemons.map((pokemon) => (
-            <button key={pokemon.id} onClick={() => changeCollected(pokemon.id)}>
+        {filteredPokemon?.length && filteredPokemon?.length > 0 ? (
+          filteredPokemon.map((pokemon) => (
+            <button
+              key={pokemon.id}
+              onClick={() => quickEdit ? changeCollected(pokemon.id) : console.log('hej')}
+            >
               <Pokemon pokemon={pokemon} />
             </button>
           ))
