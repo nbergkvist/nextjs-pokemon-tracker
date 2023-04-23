@@ -8,8 +8,9 @@ import addData from "@/firebase/addData";
 import { getCurrentUser } from "@/firebase/auth/auth";
 import PokemonOverlay from "../pokemon/pokemonoverlay";
 
-async function getDataa(id: string) {
-  const res = await PokemonTCG.findCardsByQueries({ q: `set.id:${id}` });
+async function getPokemonFromTCG(id: string, page: number) {
+  const res = await PokemonTCG.findCardsByQueries({ q: `set.id:${id}`, page: page });
+  console.log('resul', res)
   return res;
 }
 
@@ -55,12 +56,17 @@ const Set = () => {
               setFilteredPokemon(data.result?.data()?.data);
               setIsLoading(false);
             } else {
-              getDataa(params?.set)
+              getPokemonFromTCG(params?.set, 1)
                 .then((data) => {
-                  setAllPokemons(data);
-                  setFilteredPokemon(data);
-                  setFirebaseData(user, params?.set, data);
+                  getPokemonFromTCG(params?.set, 2)
+                .then((secondPageData) => {
+                  const allCards = data.concat(secondPageData);
+                  setAllPokemons(allCards);
+                  setFilteredPokemon(allCards);
+                  setFirebaseData(user, params?.set, allCards);
                   setIsLoading(false);
+                })
+                .catch(() => setIsLoading(false));
                 })
                 .catch(() => setIsLoading(false));
             }
@@ -97,17 +103,6 @@ const Set = () => {
     }
     setShowUnOwned(!showUnOwned);
   };
-
-  // useEffect(() => {
-  //   if (filter) {
-  //     const filtered = filteredPokemon?.filter((pokemon) =>
-  //       pokemon.name.toLowerCase().includes(filter.toLowerCase())
-  //     );
-  //     setFilteredPokemon(filtered);
-  //   } else if (!showOwned && !showUnOwned) {
-  //     setFilteredPokemon(allPokemons);
-  //   }
-  // }, [filter, showOwned, showUnOwned]);
 
   useEffect(() => {
     if (showOwned) {

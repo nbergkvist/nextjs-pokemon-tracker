@@ -59,7 +59,7 @@ const Sets = () => {
       </div>
       <footer className="flex">
         <button
-          className="grow h-[42px] bg-purple text-black"
+          className="grow h-[42px] bg-purple text-black mx-4 mb-4"
           onClick={signOut}
         >
           Signout
