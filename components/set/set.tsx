@@ -83,10 +83,16 @@ const Set = () => {
       }
       return pokemon;
     });
+    const newFilteredPokemonData = allPokemons?.map((pokemon) => {
+      if (pokemon.id === id) {
+        pokemon.isCollected = !pokemon.isCollected;
+      }
+      return pokemon;
+    });
     if (newPokemonData) {
       setFirebaseData(userData, params?.set, newPokemonData);
       setAllPokemons(newPokemonData);
-      setFilteredPokemon(newPokemonData);
+      setFilteredPokemon(newFilteredPokemonData);
     }
   };
 
