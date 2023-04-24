@@ -83,7 +83,7 @@ const Set = () => {
       }
       return pokemon;
     });
-    const newFilteredPokemonData = allPokemons?.map((pokemon) => {
+    const newFilteredPokemonData = filteredPokemon?.map((pokemon) => {
       if (pokemon.id === id) {
         pokemon.isCollected = !pokemon.isCollected;
       }
@@ -92,6 +92,8 @@ const Set = () => {
     if (newPokemonData) {
       setFirebaseData(userData, params?.set, newPokemonData);
       setAllPokemons(newPokemonData);
+    }
+    if (newFilteredPokemonData) {
       setFilteredPokemon(newFilteredPokemonData);
     }
   };
