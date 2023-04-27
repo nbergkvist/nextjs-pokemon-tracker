@@ -9,8 +9,11 @@ import { getCurrentUser } from "@/firebase/auth/auth";
 import PokemonOverlay from "../pokemon/pokemonoverlay";
 
 async function getPokemonFromTCG(id: string, page: number) {
-  const res = await PokemonTCG.findCardsByQueries({ q: `set.id:${id}`, page: page });
-  console.log('resul', res)
+  const res = await PokemonTCG.findCardsByQueries({
+    q: `set.id:${id}`,
+    page: page,
+  });
+  console.log("resul", res);
   return res;
 }
 
@@ -59,14 +62,14 @@ const Set = () => {
               getPokemonFromTCG(params?.set, 1)
                 .then((data) => {
                   getPokemonFromTCG(params?.set, 2)
-                .then((secondPageData) => {
-                  const allCards = data.concat(secondPageData);
-                  setAllPokemons(allCards);
-                  setFilteredPokemon(allCards);
-                  setFirebaseData(user, params?.set, allCards);
-                  setIsLoading(false);
-                })
-                .catch(() => setIsLoading(false));
+                    .then((secondPageData) => {
+                      const allCards = data.concat(secondPageData);
+                      setAllPokemons(allCards);
+                      setFilteredPokemon(allCards);
+                      setFirebaseData(user, params?.set, allCards);
+                      setIsLoading(false);
+                    })
+                    .catch(() => setIsLoading(false));
                 })
                 .catch(() => setIsLoading(false));
             }
@@ -77,13 +80,7 @@ const Set = () => {
   }, [params?.set]);
 
   const changeCollected = (id: string) => {
-    const newPokemonData = allPokemons?.map((pokemon) => {
-      if (pokemon.id === id) {
-        pokemon.isCollected = !pokemon.isCollected;
-      }
-      return pokemon;
-    });
-    const newFilteredPokemonData = filteredPokemon?.map((pokemon) => {
+    const newPokemonData = filteredPokemon?.map((pokemon) => {
       if (pokemon.id === id) {
         pokemon.isCollected = !pokemon.isCollected;
       }
@@ -92,9 +89,6 @@ const Set = () => {
     if (newPokemonData) {
       setFirebaseData(userData, params?.set, newPokemonData);
       setAllPokemons(newPokemonData);
-    }
-    if (newFilteredPokemonData) {
-      setFilteredPokemon(newFilteredPokemonData);
     }
   };
 
@@ -139,7 +133,7 @@ const Set = () => {
       );
       setFilteredPokemon(filtered);
     } else {
-      setFilteredPokemon(allPokemons)
+      setFilteredPokemon(allPokemons);
     }
   }, [showUnOwned, showOwned, filter]);
 
