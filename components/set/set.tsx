@@ -7,6 +7,7 @@ import getData from "@/firebase/getData";
 import addData from "@/firebase/addData";
 import { getCurrentUser } from "@/firebase/auth/auth";
 import PokemonOverlay from "../pokemon/pokemonoverlay";
+import Switch from "@/futureComponentLibrary/switch/switch";
 
 async function getPokemonFromTCG(id: string, page: number) {
   const res = await PokemonTCG.findCardsByQueries({
@@ -80,12 +81,19 @@ const Set = () => {
   }, [params?.set]);
 
   const changeCollected = (id: string) => {
-    const newPokemonData = filteredPokemon?.map((pokemon) => {
+    const newPokemonData = allPokemons?.map((pokemon) => {
       if (pokemon.id === id) {
         pokemon.isCollected = !pokemon.isCollected;
       }
       return pokemon;
     });
+    if (
+      selectedPokemonIndex &&
+      filteredPokemon &&
+      selectedPokemonIndex === filteredPokemon.length - 1
+    ) {
+      setSelectedPokemonIndex(selectedPokemonIndex - 1);
+    }
     if (newPokemonData) {
       setFirebaseData(userData, params?.set, newPokemonData);
       setAllPokemons(newPokemonData);
@@ -135,7 +143,7 @@ const Set = () => {
     } else {
       setFilteredPokemon(allPokemons);
     }
-  }, [showUnOwned, showOwned, filter]);
+  }, [showUnOwned, showOwned, filter, allPokemons]);
 
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
@@ -179,43 +187,25 @@ const Set = () => {
           }`}
         >
           <div className="flex mb-4">
-            <p className="grow">Quick add mode</p>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                value=""
-                checked={quickEdit}
-                onChange={() => setQuickEdit(!quickEdit)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
-            </label>
+            <Switch
+              onChange={() => setQuickEdit(!quickEdit)}
+              label="Quick add mode"
+              checked={quickEdit}
+            />
           </div>
           <div className="flex mb-4">
-            <p className="grow">Show owned</p>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                value=""
-                checked={showOwned}
-                onChange={() => filterOwned()}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
-            </label>
+            <Switch
+              onChange={() => filterOwned()}
+              label="Show owned"
+              checked={showOwned}
+            />
           </div>
           <div className="flex mb-4">
-            <p className="grow">Show unowned</p>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                value=""
-                checked={showUnOwned}
-                onChange={() => filterUnOwned()}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-darkbg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-purple after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple"></div>
-            </label>
+            <Switch
+              onChange={() => filterUnOwned()}
+              label="Show unowned"
+              checked={showUnOwned}
+            />
           </div>
         </div>
       </header>

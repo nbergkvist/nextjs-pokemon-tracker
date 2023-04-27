@@ -6,6 +6,8 @@ import {
   signUpUserWithEmailAndPassword,
   getCurrentUser,
 } from "@/firebase/auth/auth";
+import Input from "@/futureComponentLibrary/input/input";
+import Button from "@/futureComponentLibrary/button/button";
 
 function SignUpForm() {
   const router = useRouter();
@@ -38,60 +40,30 @@ function SignUpForm() {
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div className="border rounded-xl border-solid border-purple p-4 w-[250px]">
-        <div>
-          <label htmlFor="email" className="font-semibold">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id=""
-            value={formData["email"]}
-            onChange={onFormDataChange}
-            className="border border-black block w-full"
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="font-semibold">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            id=""
-            value={formData["password"]}
-            onChange={onFormDataChange}
-            className="border border-black block w-full"
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword" className="font-semibold">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            name="confirmPassword"
-            id=""
-            value={formData["confirmPassword"]}
-            onChange={onFormDataChange}
-            className="border border-black block w-full"
-          />
-        </div>
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="mt-4 grow bg-purple text-black"
-          >
-            back
-          </button>
-          <button
-            type="button"
-            onClick={onFormDataSubmit}
-            className="mt-4 grow bg-purple text-black"
-          >
-            Submit
-          </button>
+        <Input
+          onChange={onFormDataChange}
+          label={"Email"}
+          type={"email"}
+          value={formData["email"]}
+          name={"email"}
+        />
+        <Input
+          onChange={onFormDataChange}
+          label={"Password"}
+          type={"password"}
+          value={formData["password"]}
+          name={"password"}
+        />
+        <Input
+          onChange={onFormDataChange}
+          label={"Confirm Password"}
+          type={"password"}
+          value={formData["confirmPassword"]}
+          name={"confirmPassword"}
+        />
+        <div className="flex gap-3 mt-4">
+          <Button onClick={() => router.push("/")} text="Back" grow />
+          <Button onClick={onFormDataSubmit} text="Submit" grow />
         </div>
       </div>
     </div>

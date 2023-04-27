@@ -1,5 +1,6 @@
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import Link from "next/link";
+import Button from "@/futureComponentLibrary/button/button";
 
 type Props = {
   allPokemons: Array<PokemonTCG.Card & { isCollected?: boolean }>;
@@ -17,10 +18,11 @@ const PokemonOverlay = (props: Props) => {
     setSelectedPokemonIndex,
     changeCollected,
   } = props;
+  
   const nextPokemon = () => {
     if (
-      (selectedPokemonIndex !== undefined &&
-      selectedPokemonIndex + 1 > allPokemons.length - 1)
+      selectedPokemonIndex !== undefined &&
+      selectedPokemonIndex + 1 > allPokemons.length - 1
     ) {
       return;
     } else if (selectedPokemonIndex !== undefined) {
@@ -56,7 +58,9 @@ const PokemonOverlay = (props: Props) => {
             </label>
             <input
               checked={allPokemons[selectedPokemonIndex].isCollected}
-              onChange={() => changeCollected(allPokemons[selectedPokemonIndex].id)}
+              onChange={() =>
+                changeCollected(allPokemons[selectedPokemonIndex].id)
+              }
               id="red-checkbox"
               type="checkbox"
               value=""
@@ -65,27 +69,16 @@ const PokemonOverlay = (props: Props) => {
           </div>
         </>
       )}
-      <div className="flex flex-row">
-        <button
-          className="grow h-[42px] bg-purple text-black mx-4 mb-4"
-          onClick={() => previousPokemon()}
-        >
-          Previous
-        </button>
-        <button
-          className="grow h-[42px] bg-purple text-black mx-4 mb-4"
-          onClick={() => nextPokemon()}
-        >
-          Next
-        </button>
+      <div className="flex flex-row mx-4 mb-1 gap-1">
+        <Button onClick={() => previousPokemon()} grow text="Previous" />
+        <Button onClick={() => nextPokemon()} grow text="Next" />
       </div>
-      <div className="flex">
-        <button
-          className="grow h-[42px] bg-purple text-black mx-4 mb-4"
+      <div className="flex mx-4 mb-4">
+        <Button
           onClick={() => setSelectedPokemonIndex(undefined)}
-        >
-          Close
-        </button>
+          grow
+          text="Close"
+        />
       </div>
     </div>
   );

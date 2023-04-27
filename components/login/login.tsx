@@ -4,6 +4,8 @@ import {
   getCurrentUser,
   signInUserWithEmailAndPassword,
 } from "@/firebase/auth/auth";
+import Button from "@/futureComponentLibrary/button/button";
+import Input from "@/futureComponentLibrary/input/input";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -31,49 +33,23 @@ function Login() {
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div className="border rounded-xl border-solid border-purple p-4 w-[250px]">
-        <div>
-          <div>
-            <label htmlFor="email" className="font-semibold">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id=""
-              value={formData["email"]}
-              onChange={onFormDataChange}
-              className="border border-black block w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="font-semibold">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id=""
-              value={formData["password"]}
-              onChange={onFormDataChange}
-              className="border border-black block w-full"
-            />
-          </div>
-        </div>
-        <div className="flex gap-3">
-        <button
-            type="button"
-            onClick={() => router.push("/signup")}
-            className="mt-4 grow bg-purple text-black"
-          >
-            Signup
-          </button>
-          <button
-            type="button"
-            onClick={onFormDataSubmit}
-            className="mt-4 grow bg-purple text-black"
-          >
-            Login
-          </button>
+        <Input
+          onChange={onFormDataChange}
+          label={"Email"}
+          type={"email"}
+          value={formData["email"]}
+          name={"email"}
+        />
+        <Input
+          onChange={onFormDataChange}
+          label={"Password"}
+          type={"password"}
+          value={formData["password"]}
+          name={"password"}
+        />
+        <div className="flex gap-3 mt-4">
+          <Button onClick={() => router.push("/signup")} text="Signup" grow />
+          <Button onClick={onFormDataSubmit} text="Login" grow />
         </div>
       </div>
     </div>

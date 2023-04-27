@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { signOutUser } from "@/firebase/auth/auth";
 import { useRouter } from "next/navigation";
+import Button from "@/futureComponentLibrary/button/button";
+import Image from "next/image";
 
 const fetchData = async () => {
   const sets = await PokemonTCG.findSetsByQueries({
@@ -30,9 +32,7 @@ const Sets = () => {
 
   return (
     <div className="flex flex-col h-full relative">
-      <div
-        className="grow overflow-auto"
-      >
+      <div className="grow overflow-auto">
         {allSets ? (
           <div className="grow overflow-auto">
             {allSets
@@ -44,11 +44,15 @@ const Sets = () => {
                   href={`/sets/${set.id}`}
                   className="flex items-center flex-col mx-10 p-2 my-4 border rounded-xl border-solid border-purple"
                 >
-                  <img
-                    alt={set.name}
-                    src={set.images.logo}
-                    className="h-[80px]"
-                  />
+                  <div className="h-[80px] w-full relative">
+                    <Image
+                      alt={set.name}
+                      src={set.images.logo}
+                      fill
+                      sizes="small"
+                      className="object-contain"
+                    />
+                  </div>
                   <p>{set.name}</p>
                 </Link>
               ))}
@@ -57,13 +61,10 @@ const Sets = () => {
           <div>Loading</div>
         )}
       </div>
-      <footer className="flex">
-        <button
-          className="grow h-[42px] bg-purple text-black mx-4 mb-4"
-          onClick={signOut}
-        >
-          Signout
-        </button>
+      <footer>
+        <div className="mx-4 mb-4 flex">
+          <Button onClick={signOut} grow text="Signout" />
+        </div>
       </footer>
     </div>
   );
