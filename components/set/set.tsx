@@ -8,6 +8,7 @@ import addData from "@/firebase/addData";
 import { getCurrentUser } from "@/firebase/auth/auth";
 import PokemonOverlay from "../pokemon/pokemonoverlay";
 import Switch from "@/futureComponentLibrary/switch/switch";
+import Input from "@/futureComponentLibrary/input/input";
 
 async function getPokemonFromTCG(id: string, page: number) {
   const res = await PokemonTCG.findCardsByQueries({
@@ -152,14 +153,14 @@ const Set = () => {
   return (
     <div className="flex flex-col h-full relative">
       <header className="flex w-full relative">
-        <input
-          type="text"
-          id="first_name"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm block grow p-2.5"
-          placeholder="Search"
-          value={filter}
+        <div className="grow p-1">
+        <Input
           onChange={handleFilterChange}
+          value={filter}
+          name={"search"}
+          placeholder={"Search"}
         />
+        </div>
         <div className="w-[50px] flex items-center justify-center">
           <button
             className="w-[32px]"

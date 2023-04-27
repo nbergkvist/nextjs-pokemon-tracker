@@ -2,14 +2,15 @@ import React from "react";
 
 type Props = {
   onChange: any;
-  label: string;
+  label?: string;
   type?: "text" | "email" | "password";
   value?: string;
   name: string;
+  placeholder?: string;
 };
 
 const Input = (props: Props) => {
-  const { onChange, label, value, type = "text", name } = props;
+  const { onChange, label, value, type = "text", name, placeholder } = props;
   return (
     <div>
       {label && <label className="font-semibold">{label}</label>}
@@ -18,7 +19,9 @@ const Input = (props: Props) => {
         name={name}
         value={value}
         onChange={onChange}
-        className="border border-black block w-full"
+        placeholder={placeholder}
+        className="border rounded block w-full bg-darkbg border-purple text-sm p-2"
+        style={{ color: "#ffffff", outline: "none" }}
       />
     </div>
   );
