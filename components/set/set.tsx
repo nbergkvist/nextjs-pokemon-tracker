@@ -49,6 +49,7 @@ const Set = () => {
   const [selectedPokemonIndex, setSelectedPokemonIndex] = useState<
     number | undefined
   >(undefined);
+  const [allFullOpacity, setAllFullOpacity] = useState<boolean>(false);
 
   useEffect(() => {
     getCurrentUser().then((user) => {
@@ -208,6 +209,13 @@ const Set = () => {
               checked={showUnOwned}
             />
           </div>
+          <div className="flex mb-4">
+            <Switch
+              onChange={() => setAllFullOpacity(!allFullOpacity)}
+              label="Images full opacity"
+              checked={allFullOpacity}
+            />
+          </div>
         </div>
       </header>
       <div
@@ -227,7 +235,7 @@ const Set = () => {
                   : setSelectedPokemonIndex(index)
               }
             >
-              <Pokemon pokemon={pokemon} />
+              <Pokemon pokemon={pokemon} allFullOpacity={allFullOpacity} />
             </button>
           ))
         ) : isLoading ? (
