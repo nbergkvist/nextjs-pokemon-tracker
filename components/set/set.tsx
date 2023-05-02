@@ -15,7 +15,6 @@ async function getPokemonFromTCG(id: string, page: number) {
     q: `set.id:${id}`,
     page: page,
   });
-  console.log("resul", res);
   return res;
 }
 
@@ -31,6 +30,22 @@ const setFirebaseData = async (
 ) => {
   const { result, error } = await addData(user, id, { data });
   return { result, error };
+};
+
+const mergeResults = (
+  currentCards: Array<PokemonTCG.Card & { isCollected?: boolean }>,
+  newCards: PokemonTCG.Card[]
+) => {
+  const mergedArray = [...currentCards];
+  newCards.map((obj) => {
+    const index = mergedArray.findIndex((item) => item.id === obj.id);
+    if (index !== -1) {
+      mergedArray[index] = { ...mergedArray[index] };
+    } else {
+      mergedArray.push(obj);
+    }
+  });
+  return mergedArray;
 };
 
 const Set = () => {
@@ -61,6 +76,28 @@ const Set = () => {
               setAllPokemons(data.result?.data()?.data);
               setFilteredPokemon(data.result?.data()?.data);
               setIsLoading(false);
+              // ----------------------------------------------------------------------
+              // Total should be sent down from sets.
+              // Then this call should not be made unless total is 
+              // differing from data from firebase
+              getPokemonFromTCG(params?.set, 1)
+                .then((dataTCG) => {
+                  getPokemonFromTCG(params?.set, 2)
+                    .then((secondPageData) => {
+                      const allCards = dataTCG.concat(secondPageData);
+                      if (allCards.length < data.result?.data()?.data.length) {
+                        const mergedData = mergeResults(
+                          data.result?.data()?.data,
+                          allCards
+                        );
+                        setAllPokemons(mergedData);
+                        setFilteredPokemon(mergedData);
+                      }
+                    })
+                    .catch(() => setIsLoading(false));
+                })
+                .catch(() => setIsLoading(false));
+              // ----------------------------------------------------------------------
             } else {
               getPokemonFromTCG(params?.set, 1)
                 .then((data) => {
@@ -155,12 +192,12 @@ const Set = () => {
     <div className="flex flex-col h-full relative">
       <header className="flex w-full relative">
         <div className="grow p-1">
-        <Input
-          onChange={handleFilterChange}
-          value={filter}
-          name={"search"}
-          placeholder={"Search"}
-        />
+          <Input
+            onChange={handleFilterChange}
+            value={filter}
+            name={"search"}
+            placeholder={"Search"}
+          />
         </div>
         <div className="w-[50px] flex items-center justify-center">
           <button
