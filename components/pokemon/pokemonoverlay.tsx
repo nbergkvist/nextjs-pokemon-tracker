@@ -42,8 +42,9 @@ const PokemonOverlay = (props: Props) => {
     <div className="h-full w-full bg-darkbg absolute top-0 left-0 flex flex-col">
       {selectedPokemonIndex !== undefined && (
         <>
-          <div className="grow m-2">
+          <div className="grow m-2 h-[80%]">
             <img
+            className="h-[80%] m-auto"
               alt={allPokemons[selectedPokemonIndex].name}
               src={allPokemons[selectedPokemonIndex].images.large}
             />

@@ -25,6 +25,11 @@ const Sets = () => {
   useEffect(() => {
     fetchData()
       .then((data) => {
+        data.sort((a, b) => {
+          const dateA = new Date(a.releaseDate).getTime();
+          const dateB = new Date(b.releaseDate).getTime();
+          return dateA - dateB;
+        });
         setAllSets(data);
       })
       .catch(console.error);

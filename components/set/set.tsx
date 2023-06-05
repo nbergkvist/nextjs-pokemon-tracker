@@ -85,6 +85,7 @@ const Set = () => {
                   getPokemonFromTCG(params?.set, 2)
                     .then((secondPageData) => {
                       const allCards = dataTCG.concat(secondPageData);
+                      console.log('all cards', allCards)
                       if (allCards.length < data.result?.data()?.data.length) {
                         const mergedData = mergeResults(
                           data.result?.data()?.data,
